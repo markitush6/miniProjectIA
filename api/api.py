@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import ia.recomendacion_anime  as ra
 
 app = Flask(__name__)
 
@@ -15,35 +16,36 @@ def entrenar_modelo():
     """
     Endpoint para entrenar el algoritmo
     """
-    return jsonify({
-        "message": "Solicitud de entrenamiento recibida",
-        "status": "success"
-    })
+    data = request.get_json()
+    print(data)
+
+    if not data or 'ratings' not in data:
+        return jsonify({"error": "Se requieren ratings"}), 400
+
+    user_ratings = data['ratings']  # dict: {anime_id: rating}
+
+    try:
+        recomendaciones = ra.trainingRecommendation(user_ratings, True)
+        return jsonify({"recomendaciones": recomendaciones})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/api/recomendar', methods=['POST'])
 def obtener_recomendaciones():
-    """
-    Obtener recomendaciones basadas en ratings
-    """
     data = request.get_json()
-    
+    print(data)
+
     if not data or 'ratings' not in data:
         return jsonify({"error": "Se requieren ratings"}), 400
-    
-    user_ratings = data['ratings']
-    
-    # Validaciones básicas
-    if not isinstance(user_ratings, dict):
-        return jsonify({"error": "Los ratings deben ser un objeto JSON"}), 400
-    
-    if len(user_ratings) == 0:
-        return jsonify({"error": "Se requiere al menos un rating"}), 400
-    
-    return jsonify({
-        "message": "Solicitud de recomendaciones recibida",
-        "ratings_recibidos": user_ratings,
-        "status": "success"
-    })
+
+    user_ratings = data['ratings']  # dict: {anime_id: rating}
+
+    try:
+        recomendaciones = ra.trainingRecommendation(user_ratings)
+        return jsonify({"recomendaciones": recomendaciones})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route('/api/probar', methods=['GET'])
 def probar_algoritmo():
