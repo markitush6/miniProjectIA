@@ -1,6 +1,15 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 import mysql.connector
 from config import get_db_connection
+from flask_cors import CORS
+import pandas as pd 
+import os
+import sys
+RAIZ = os.path.dirname(os.path.dirname(__file__))  # sube dos niveles desde /api/api.py
+sys.path.append(RAIZ)
+RUTA_CSV = os.path.join(RAIZ, 'anime_with_images.csv')
+from ia.script import procesar_recomendaciones
+import ia.recomendacion_anime as ra
 
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_animeworld_2024'  # Clave para las sesiones
@@ -10,9 +19,11 @@ def index():
     """Página principal"""
     return render_template('index.html')
 
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+
 @app.route('/api/estado', methods=['GET'])
 def estado_check():
-    """Verificar estado del servicio"""
     return jsonify({
         "status": "active",
         "service": "Anime Recommendation API",
@@ -21,38 +32,43 @@ def estado_check():
 
 @app.route('/api/entrenar', methods=['POST'])
 def entrenar_modelo():
-    """
-    Endpoint para entrenar el algoritmo
-    """
-    return jsonify({
-        "message": "Solicitud de entrenamiento recibida",
-        "status": "success"
-    })
+    data = request.get_json()
+    print(data)
+
+    if not data or 'ratings' not in data:
+        return jsonify({"error": "Se requieren ratings"}), 400
+
+    user_ratings = data['ratings']
+
+    try:
+        recomendaciones = ra.trainingRecommendation(user_ratings, True)
+        return jsonify({"recomendaciones": recomendaciones})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/api/recomendar', methods=['POST'])
 def obtener_recomendaciones():
-    """
-    Obtener recomendaciones basadas en ratings
-    """
     data = request.get_json()
-    
+    print(data)
+
     if not data or 'ratings' not in data:
         return jsonify({"error": "Se requieren ratings"}), 400
-    
+
     user_ratings = data['ratings']
-    
-    # Validaciones básicas
-    if not isinstance(user_ratings, dict):
-        return jsonify({"error": "Los ratings deben ser un objeto JSON"}), 400
-    
-    if len(user_ratings) == 0:
-        return jsonify({"error": "Se requiere al menos un rating"}), 400
-    
-    return jsonify({
-        "message": "Solicitud de recomendaciones recibida",
-        "ratings_recibidos": user_ratings,
-        "status": "success"
-    })
+
+    try:
+        recomendaciones = ra.trainingRecommendation(user_ratings)
+
+        # Ejecutar el script con las recomendaciones
+        recomendaciones = list(recomendaciones)[:10]
+        procesar_recomendaciones(recomendaciones)
+        anime_img = pd.read_csv(RUTA_CSV, encoding='utf-8', usecols=range(2))
+
+
+        return jsonify({"recomendaciones": anime_img.to_dict(orient='records')})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -128,7 +144,6 @@ def get_user():
     else:
         return jsonify({'logged_in': False})
 
-# Manejo de errores
 @app.errorhandler(404)
 def no_encontrado(error):
     return jsonify({"error": "Endpoint no encontrado"}), 404
