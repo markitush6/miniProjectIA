@@ -46,7 +46,7 @@ def trainingRecommendation(user_ratings: dict, training = False):
             corrMatrix = pickle.load(f)
         print("✅ Matriz de correlación cargada.")
     else:
-        corrMatrix = userRatings.corr(method='pearson', min_periods=100)
+        corrMatrix = userRatings.corr(method='pearson', min_periods=500)
         with open(CORR_PATH, 'wb') as f:
             pickle.dump(corrMatrix, f)
         print("✅ Matriz de correlación calculada y guardada.")

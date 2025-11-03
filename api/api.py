@@ -1,11 +1,19 @@
 from flask import Flask, request, jsonify
-import ia.recomendacion_anime  as ra
+from flask_cors import CORS
+import ia.recomendacion_anime as ra
+from ia.script import procesar_recomendaciones
+import pandas as pd 
+import os
 
 app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+
+RAIZ = os.path.dirname(os.path.dirname(__file__))  # sube dos niveles desde /api/api.py
+RUTA_CSV = os.path.join(RAIZ, 'anime_with_images.csv')
 
 @app.route('/api/estado', methods=['GET'])
 def estado_check():
-    """Verificar estado del servicio"""
     return jsonify({
         "status": "active",
         "service": "Anime Recommendation API"
@@ -13,16 +21,13 @@ def estado_check():
 
 @app.route('/api/entrenar', methods=['POST'])
 def entrenar_modelo():
-    """
-    Endpoint para entrenar el algoritmo
-    """
     data = request.get_json()
     print(data)
 
     if not data or 'ratings' not in data:
         return jsonify({"error": "Se requieren ratings"}), 400
 
-    user_ratings = data['ratings']  # dict: {anime_id: rating}
+    user_ratings = data['ratings']
 
     try:
         recomendaciones = ra.trainingRecommendation(user_ratings, True)
@@ -38,32 +43,31 @@ def obtener_recomendaciones():
     if not data or 'ratings' not in data:
         return jsonify({"error": "Se requieren ratings"}), 400
 
-    user_ratings = data['ratings']  # dict: {anime_id: rating}
+    user_ratings = data['ratings']
 
     try:
         recomendaciones = ra.trainingRecommendation(user_ratings)
-        return jsonify({"recomendaciones": recomendaciones})
+
+        # Ejecutar el script con las recomendaciones
+        recomendaciones = list(recomendaciones)[:10]
+        procesar_recomendaciones(recomendaciones)
+        anime_img = pd.read_csv(RUTA_CSV, encoding='utf-8', usecols=range(2))
+
+
+        return jsonify({"recomendaciones": anime_img.to_dict(orient='records')})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 
 @app.route('/api/probar', methods=['GET'])
 def probar_algoritmo():
-    """
-    Probar el algoritmo con caso de prueba
-    """
-    test_case = {
-        # "Hunter x Hunter (2011)": 10,
-        # "School Days": 1
-    }
-    
+    test_case = {}
     return jsonify({
         "test_case": test_case,
         "message": "Prueba recibida - ejecutando caso de prueba",
         "status": "success"
     })
 
-# Manejo de errores
 @app.errorhandler(404)
 def no_encontrado(error):
     return jsonify({"error": "Endpoint no encontrado"}), 404
