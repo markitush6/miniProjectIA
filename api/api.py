@@ -42,7 +42,14 @@ def entrenar_modelo():
 
     try:
         recomendaciones = ra.trainingRecommendation(user_ratings, True)
-        return jsonify({"recomendaciones": recomendaciones})
+        randoms = ra.trainingRecommendation(user_ratings, False, False)
+        recomendaciones = list(recomendaciones)[:10]
+        randoms = list(recomendaciones)[:10]
+        recomendaciones_img = procesar_recomendaciones(recomendaciones)
+        randoms_img = procesar_recomendaciones(randoms)
+
+        
+        return jsonify({"recomendaciones": recomendaciones_img, "randoms": randoms_img})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -61,11 +68,10 @@ def obtener_recomendaciones():
 
         # Ejecutar el script con las recomendaciones
         recomendaciones = list(recomendaciones)[:10]
-        procesar_recomendaciones(recomendaciones)
-        anime_img = pd.read_csv(RUTA_CSV, encoding='utf-8', usecols=range(2))
+        animes_img = procesar_recomendaciones(recomendaciones)
 
 
-        return jsonify({"recomendaciones": anime_img.to_dict(orient='records')})
+        return jsonify({"recomendaciones": animes_img})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -125,7 +131,21 @@ def login():
         return f"Error de base de datos: {str(e)}", 500
     except Exception as e:
         return f"Error interno: {str(e)}", 500
+@app.route('/api/descubre', methods=['POST'])
+def descubre():
+    data = request.get_json()
+    if not data or 'ratings' not in data:
+        return jsonify({"error": "Se requieren ratings"}), 400
 
+    user_ratings = data['ratings']
+
+    try:
+        recomendaciones = ra.trainingRecommendation(user_ratings, False, False)
+        recomendaciones = list(recomendaciones)[:10]
+        animes_img = procesar_recomendaciones(recomendaciones)
+        return jsonify({"random": animes_img})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 @app.route('/api/logout')
 def logout():
     """Cerrar sesión"""
@@ -168,4 +188,4 @@ if __name__ == '__main__':
     print("   GET  /api/logout    - Logout de usuario")
     print("   GET  /api/user      - Info del usuario")
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5050)

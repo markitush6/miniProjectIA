@@ -4,7 +4,6 @@ import time
 import os
 from tqdm import tqdm
 
-OUTPUT_CSV = 'anime_with_images.csv'
 API_URL = 'https://api.jikan.moe/v4/anime'
 DELAY = 0.5
 
@@ -26,20 +25,14 @@ def procesar_recomendaciones(recomendaciones):
     recomendaciones = recomendaciones[:10]
 
     # Crear diccionario con resultados
-    resultados = {}
+    resultados = []
 
     for name in tqdm(recomendaciones, desc="Buscando imágenes"):
         image_url = fetch_anime_image(name)
-        resultados[name] = image_url
+        resultados.append({'name': name, 'image_url': image_url})
         time.sleep(DELAY)
+    return resultados
 
-    # Escribir el archivo desde cero
-    with open(OUTPUT_CSV, 'w', newline='', encoding='utf-8') as outfile:
-        fieldnames = ['name', 'image_url']
-        writer = csv.DictWriter(outfile, fieldnames=fieldnames)
-        writer.writeheader()
-        for name, image_url in resultados.items():
-            writer.writerow({'name': name, 'image_url': image_url})
 
 # # Ejemplo de uso
 # if __name__ == '__main__':

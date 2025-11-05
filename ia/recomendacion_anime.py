@@ -1,7 +1,7 @@
 import pandas as pd
 import pickle
 import os
-def trainingRecommendation(user_ratings: dict, training = False):
+def trainingRecommendation(user_ratings: dict, training = False, isRecomendations=True):
     CORR_PATH = 'ia/corrMatrix.pkl'
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     if os.path.exists(CORR_PATH) and training:
@@ -63,7 +63,21 @@ def trainingRecommendation(user_ratings: dict, training = False):
     corrMatrix_names = corrMatrix.rename(index=name_map, columns=name_map)
 
     # Extraer valoraciones del usuario
+
     myRatings = userRatings.loc[0].dropna()
+    if not isRecomendations:
+        random_animes = animes.sample(n=10)
+        promedio_dict = {}
+        for _, row in random_animes.iterrows():
+            anime_id = row['anime_id']
+            nombre = row['name']
+            valoraciones = ratings[ratings['anime_id'] == anime_id]['rating']
+            promedio = round(valoraciones.mean(), 2) if not valoraciones.empty else 0.0
+            promedio_dict[nombre] = promedio
+
+        print("🎲 Recomendaciones aleatorias con valoración promedio:")
+        print(promedio_dict)
+        return promedio_dict
 
     # Generar recomendaciones
     simCandidates = pd.Series(dtype='float64')

@@ -1,358 +1,593 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AnimeWorld - Tu catálogo de anime</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
     <style>
-        :root {
-            --primary-color: #6f42c1;
-            --secondary-color: #e83e8c;
-            --dark-color: #1a1a2e;
-            --light-color: #f8f9fa;
-        }
-        
-        body {
-            background-color: #0f0f1b;
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        .navbar {
-            background-color: var(--dark-color) !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-        
-        .hero-section {
-            background: linear-gradient(rgba(26, 26, 46, 0.8), rgba(26, 26, 46, 0.9)), 
-                        url('https://images.unsplash.com/photo-1531315630201-bb15abeb1653?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-            padding: 100px 0;
-            margin-bottom: 40px;
-        }
-        
-        .anime-card {
-            background-color: #1a1a2e;
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid #2d2d4d;
-            height: 100%;
-        }
-        
-        .anime-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(111, 66, 193, 0.3);
-        }
-        
-        .anime-img {
-            height: 300px;
-            object-fit: cover;
-            width: 100%;
-        }
-        
-        .rating {
-            color: #ffc107;
-            font-size: 1.1rem;
-        }
-        
-        .badge-type {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 1;
-        }
-        
-        .section-title {
-            position: relative;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        
-        .btn-primary:hover {
-            background-color: #5a32a3;
-            border-color: #5a32a3;
-        }
-        
-        .footer {
-            background-color: var(--dark-color);
-            padding: 40px 0;
-            margin-top: 60px;
-        }
-        
-        .genre-badge {
-            background-color: #2d2d4d;
-            color: #b8b8d0;
-            margin-right: 5px;
-            margin-bottom: 5px;
-        }
-        
-        .progress {
-            background-color: #2d2d4d;
-            height: 8px;
-        }
-        
-        .progress-bar {
-            background-color: var(--primary-color);
-        }
+      :root {
+        --primary-color: #6f42c1;
+        --secondary-color: #e83e8c;
+        --dark-color: #1a1a2e;
+        --light-color: #f8f9fa;
+      }
+
+      body {
+        background-color: #0f0f1b;
+        color: #fff;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .navbar {
+        background-color: var(--dark-color) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .hero-section {
+        background: linear-gradient(
+            rgba(26, 26, 46, 0.8),
+            rgba(26, 26, 46, 0.9)
+          ),
+          url("https://images.unsplash.com/photo-1531315630201-bb15abeb1653?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80");
+        background-size: cover;
+        background-position: center;
+        padding: 100px 0;
+        margin-bottom: 40px;
+      }
+
+      .anime-card {
+        background-color: #1a1a2e;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border: 1px solid #2d2d4d;
+        height: 100%;
+      }
+
+      .anime-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(111, 66, 193, 0.3);
+      }
+
+      .anime-img {
+        height: 300px;
+        object-fit: cover;
+        width: 100%;
+      }
+
+      .rating {
+        color: #ffc107;
+        font-size: 1.1rem;
+      }
+
+      .badge-type {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 1;
+      }
+
+      .section-title {
+        position: relative;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+      }
+
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+      }
+      .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+      }
+
+      .btn-primary:hover {
+        background-color: #5a32a3;
+        border-color: #5a32a3;
+      }
+
+      .footer {
+        background-color: var(--dark-color);
+        padding: 40px 0;
+        margin-top: 60px;
+      }
+
+      .genre-badge {
+        background-color: #2d2d4d;
+        color: #b8b8d0;
+        margin-right: 5px;
+        margin-bottom: 5px;
+      }
+
+      .progress {
+        background-color: #2d2d4d;
+        height: 8px;
+      }
+
+      .progress-bar {
+        background-color: var(--primary-color);
+      }
       #carousel-container {
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 20px;
-  border-top: 1px solid #444;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  width: 100%;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      #container {
+        border-top: 1px solid #444;
+        padding: 20px;
+      }
 
-#carousel-track {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  min-width: max-content;
-}
+      #carousel-track {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        min-width: max-content;
+      }
 
-.scroll-item {
-  flex: 0 0 auto;
-  width: 200px;
-  background-color: #222;
-  border-radius: 10px;
-  padding: 10px;
-  text-align: center;
-  color: white;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  
-  transition: transform 0.3s ease;
-}
+      .scroll-item {
+        flex: 0 0 auto;
+        width: 200px;
+        background-color: #222;
+        border-radius: 10px;
+        padding: 10px;
+        text-align: center;
+        color: white;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 
-.scroll-item:hover {
-  transform: translateY(-5px);
-}
-#carousel-container::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Edge */
-}
+        transition: transform 0.3s ease;
+      }
 
+      .scroll-item:hover {
+        transform: translateY(-5px);
+      }
+      #carousel-container::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Edge */
+      }
 
-.scroll-item img {
-  width: 100%;
-  height: 280px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
+      .scroll-item img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
 
-.scroll-item p {
-  font-weight: bold;
-  font-size: 14px;
-  margin: 0;
-}
- #auth-section {
-            margin-left: 10px;
+      .scroll-item p {
+        font-weight: bold;
+        font-size: 14px;
+        margin: 0;
+      }
+      #auth-section {
+        margin-left: 10px;
+      }
+
+      .actualizar-btn {
+        font-size: 24px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        margin: 10px;
+      }
+
+      .actualizar-btn:hover {
+        transform: rotate(90deg);
+      }
+
+      .actualizar-btn:active {
+        transform: scale(1.2) rotate(360deg);
+      }
+      .spinner,
+      .spinner2 {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 5px solid #ccc;
+        border-top: 5px solid #3498db;
+        border-radius: 50%;
+        animation: girar 1s linear infinite;
+      }
+
+      @keyframes girar {
+        from {
+          transform: rotate(0deg);
         }
-
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      #titleRandom {
+        display: flex;
+        justify-content: space-between;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="bi bi-controller me-2"></i>AnimeWorld
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Series</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Películas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Géneros</a>
-                    </li>                    
-                </ul>
-                <div id="auth-section">
-    {% if session.get('logged_in') %}
-    <div class="dropdown">
-        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            <i class="bi bi-person-check me-1"></i>{{ session.get('username') }}
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="#">
+          <i class="bi bi-controller me-2"></i>AnimeWorld
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
         </button>
-        <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="/api/logout"><i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión</a></li>
-        </ul>
-    </div>
-    {% else %}
-    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
-        <i class="bi bi-person me-1"></i>Iniciar Sesión
-    </button>
-    {% endif %}
-</div>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Series</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Películas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Géneros</a>
+            </li>
+          </ul>
+          <div id="auth-section">
+            {% if session.get('logged_in') %}
+            <div class="dropdown">
+              <button
+                class="btn btn-outline-primary dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+              >
+                <i class="bi bi-person-check me-1"></i>{{
+                session.get('username') }}
+              </button>
+              <ul class="dropdown-menu dropdown-menu-dark">
+                <li>
+                  <a class="dropdown-item" href="/api/logout"
+                    ><i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión</a
+                  >
+                </li>
+              </ul>
             </div>
+            {% else %}
+            <button
+              class="btn btn-outline-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#loginModal"
+            >
+              <i class="bi bi-person me-1"></i>Iniciar Sesión
+            </button>
+            {% endif %}
+          </div>
         </div>
+      </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero-section">
-        <div class="container text-center">
-            <h1 class="display-4 fw-bold mb-4">Descubre el Mundo del Anime</h1>
-            <p class="lead mb-4">Explora nuestro catálogo de series y películas anime con calificaciones y reseñas.</p>
-            <a href="#anime-list" class="btn btn-primary btn-lg">Ver Catálogo</a>
-        </div>
+      <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-4">Descubre el Mundo del Anime</h1>
+        <p class="lead mb-4">
+          Explora nuestro catálogo de series y películas anime con
+          calificaciones y reseñas.
+        </p>
+        <button id="entrenar" class="btn btn-primary btn-lg">
+          Ver Catalogo
+        </button>
+      </div>
     </section>
-    <div id="carousel-container">
-        <h2>Recomendaciones</h2>
-  <div id="carousel-track"></div>
-</div>
-    
-
-<!-- Modal de Login -->
-<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark border-secondary">
-            <div class="modal-header border-secondary">
-                <h5 class="modal-title" id="loginModalLabel">
-                    <i class="bi bi-person-circle me-2"></i>Iniciar Sesión
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="/api/login" method="POST">
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Usuario</label>
-                        <input type="text" class="form-control bg-dark text-light border-secondary" name="username" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control bg-dark text-light border-secondary" name="password" required>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+    <div id="container">
+      <div id="titleRandom">
+        <h2>Descubre</h2>
+        <button id="btnActualizar" class="actualizar-btn" title="Actualizar">
+          <span class="icono">🔄</span>
+          <div class="spinner"></div>
+        </button>
+      </div>
+      <div id="carousel-container">
+        <div id="carousel-track" class="random"></div>
+      </div>
     </div>
-</div>
+    <div id="container">
+      <h2>Recomendaciones</h2>
+      <div id="carousel-container">
+        <div id="carousel-track" class="recomendaciones"></div>
+      </div>
+    </div>
+
+    <!-- Modal de Login -->
+    <div
+      class="modal fade"
+      id="loginModal"
+      tabindex="-1"
+      aria-labelledby="loginModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark border-secondary">
+          <div class="modal-header border-secondary">
+            <h5 class="modal-title" id="loginModalLabel">
+              <i class="bi bi-person-circle me-2"></i>Iniciar Sesión
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form action="/api/login" method="POST">
+              <div class="mb-3">
+                <label for="username" class="form-label">Usuario</label>
+                <input
+                  type="text"
+                  class="form-control bg-dark text-light border-secondary"
+                  name="username"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input
+                  type="password"
+                  class="form-control bg-dark text-light border-secondary"
+                  name="password"
+                  required
+                />
+              </div>
+              <div class="text-center">
+                <button type="submit" class="btn btn-primary w-100">
+                  Iniciar Sesión
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5><i class="bi bi-controller me-2"></i>AnimeWorld</h5>
-                    <p class="text-light">Tu destino para descubrir y calificar series y películas de anime.</p>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h5>Enlaces Rápidos</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-light text-decoration-none">Inicio</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">Series</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">Películas</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">Géneros</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h5>Contacto</h5>
-                    <ul class="list-unstyled">
-                        <li class="text-light"><i class="bi bi-envelope me-2"></i>info@animeworld.com</li>
-                        <li class="text-light"><i class="bi bi-globe me-2"></i>www.animeworld.com</li>
-                    </ul>
-                    <div class="mt-3">
-                        <a href="#" class="text-light me-3"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="text-light me-3"><i class="bi bi-twitter"></i></a>
-                        <a href="#" class="text-light me-3"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="text-light"><i class="bi bi-discord"></i></a>
-                    </div>
-                </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 mb-4">
+            <h5><i class="bi bi-controller me-2"></i>AnimeWorld</h5>
+            <p class="text-light">
+              Tu destino para descubrir y calificar series y películas de anime.
+            </p>
+          </div>
+          <div class="col-md-4 mb-4">
+            <h5>Enlaces Rápidos</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="#" class="text-light text-decoration-none">Inicio</a>
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none">Series</a>
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Películas</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none">Géneros</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-4 mb-4">
+            <h5>Contacto</h5>
+            <ul class="list-unstyled">
+              <li class="text-light">
+                <i class="bi bi-envelope me-2"></i>info@animeworld.com
+              </li>
+              <li class="text-light">
+                <i class="bi bi-globe me-2"></i>www.animeworld.com
+              </li>
+            </ul>
+            <div class="mt-3">
+              <a href="#" class="text-light me-3"
+                ><i class="bi bi-facebook"></i
+              ></a>
+              <a href="#" class="text-light me-3"
+                ><i class="bi bi-twitter"></i
+              ></a>
+              <a href="#" class="text-light me-3"
+                ><i class="bi bi-instagram"></i
+              ></a>
+              <a href="#" class="text-light"><i class="bi bi-discord"></i></a>
             </div>
-            <hr class="my-4 bg-secondary">
-            <div class="text-center text-light">
-                <p>&copy; 2023 AnimeWorld. Todos los derechos reservados.</p>
-            </div>
+          </div>
         </div>
+        <hr class="my-4 bg-secondary" />
+        <div class="text-center text-light">
+          <p>&copy; 2023 AnimeWorld. Todos los derechos reservados.</p>
+        </div>
+      </div>
     </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
-        
-        const obtenerRecomendaciones = async () => {
-  try {
-    let recomendaciones = JSON.parse(localStorage.getItem('recomendaciones') || "[]")
-    if (recomendaciones.length === 0) {
-        const response = await fetch('http://localhost:5000/api/recomendar', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ratings: { 110561: 10, 2476: 1 } })
+      const obtenerRandoms = async () => {
+        try {
+          let animesRandom = JSON.parse(localStorage.getItem("random") || "[]");
+          if (animesRandom.length === 0) {
+            const response = await fetch("http://localhost:5050/api/descubre", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ratings: { 110561: 10, 2476: 1 } }),
+            });
+            const data = await response.json();
+            animesRandom = data.random;
+            localStorage.setItem("random", JSON.stringify(animesRandom));
+            console.log("random", JSON.stringify(animesRandom));
+          }
+          const randomDiv = document.getElementsByClassName("random")[0];
+          animesRandom.forEach((anime) => {
+            const item = document.createElement("div");
+            item.className = "scroll-item";
+
+            const img = document.createElement("img");
+            img.src =
+              anime.image_url ||
+              "https://via.placeholder.com/200x300?text=Anime";
+            img.alt = anime.title;
+
+            const title = document.createElement("p");
+            title.textContent = anime.name || anime.title;
+
+            item.appendChild(img);
+            item.appendChild(title);
+            randomDiv.appendChild(item);
+          });
+        } catch (error) {
+          console.error("Error al obtener randoms:", error);
+        }
+      };
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        obtenerRandoms();
+        obtenerRecomendaciones();
+      });
+
+      const obtenerRecomendaciones = async () => {
+        try {
+          let recomendaciones = JSON.parse(
+            localStorage.getItem("recomendaciones") || "[]"
+          );
+          if (recomendaciones.length === 0) {
+            const response = await fetch(
+              "http://localhost:5050/api/recomendar",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ratings: { 110561: 10, 2476: 1 } }),
+              }
+            );
+
+            if (!response.ok)
+              throw new Error("Error en la respuesta del servidor");
+
+            const data = await response.json();
+            recomendaciones = data.recomendaciones;
+            localStorage.setItem(
+              "recomendaciones",
+              JSON.stringify(recomendaciones)
+            );
+            console.log("recomendaciones", JSON.stringify(recomendaciones));
+          }
+          const track = document.getElementsByClassName("recomendaciones")[0];
+
+          recomendaciones.forEach((anime) => {
+            const item = document.createElement("div");
+            item.className = "scroll-item";
+
+            const img = document.createElement("img");
+            img.src =
+              anime.image_url ||
+              "https://via.placeholder.com/200x300?text=Anime";
+            img.alt = anime.title;
+
+            const title = document.createElement("p");
+            title.textContent = anime.name || anime.title;
+
+            item.appendChild(img);
+            item.appendChild(title);
+            track.appendChild(item);
+          });
+        } catch (error) {
+          console.error("Error al obtener recomendaciones:", error);
+        }
+      };
+      document
+        .getElementById("btnActualizar")
+        .addEventListener("click", async () => {
+          const btn = document.getElementById("btnActualizar");
+          const icono = btn.querySelector(".icono");
+          const spinner = btn.querySelector(".spinner");
+
+          icono.style.display = "none";
+          spinner.style.display = "block";
+
+          localStorage.removeItem("random");
+          document.getElementsByClassName("random")[0].innerHTML = "";
+
+          await obtenerRandoms();
+
+          spinner.style.display = "none";
+          icono.style.display = "inline";
         });
-    
-        if (!response.ok) throw new Error("Error en la respuesta del servidor");
-    
-        const data = await response.json();
-        recomendaciones = data.recomendaciones;
-        localStorage.setItem("recomendaciones", JSON.stringify(recomendaciones))
-        console.log("recomendaciones", JSON.stringify(recomendaciones));
+      //   document
+      //     .getElementById("entrenar")
+      //     .addEventListener("click", async () => {
+      //       const btn = document.getElementById("entrenar");
+      //       btn.textContent = "";
+      //       const spinner = document.createElement("div");
+      //       spinner.className = "spinner2";
+      //       spinner.style.display = "block";
+      //       btn.appendChild(spinner);
 
-    }
-    
-    const track = document.getElementById('carousel-track');
+      //       document.getElementsByClassName("random")[0].innerHTML = "";
+      //       document.getElementsByClassName("recomendaciones")[0].innerHTML = "";
+      //       localStorage.removeItem("random");
+      //       localStorage.removeItem("recomendaciones");
+      //       await new Promise((resolve) => setTimeout(resolve, 0));
+      //       try {
+      //         const response = await fetch("http://localhost:5050/api/entrenar", {
+      //           method: "POST",
+      //           headers: { "Content-Type": "application/json" },
+      //           body: JSON.stringify({ ratings: { 110561: 10, 2476: 1 } }),
+      //         });
 
-    recomendaciones.forEach(anime => {
-      const item = document.createElement('div');
-      item.className = 'scroll-item';
-
-      const img = document.createElement('img');
-      img.src = anime.image_url || 'https://via.placeholder.com/200x300?text=Anime';
-      img.alt = anime.title;
-
-      const title = document.createElement('p');
-      title.textContent = anime.name || anime.title;
-
-      item.appendChild(img);
-      item.appendChild(title);
-      track.appendChild(item);
-    });
-  } catch (error) {
-    console.error("Error al obtener recomendaciones:", error);
-  }
-};
-
-
-document.addEventListener('DOMContentLoaded', () => {
-       obtenerRecomendaciones();
-}); 
-
-
-            </script>
-</body>
-</html> 
+      //         if (!response.ok)
+      //           throw new Error("Error en la respuesta del servidor");
+      //         console.log("response", response);
+      //         localStorage.setItem(
+      //           "recomendaciones",
+      //           JSON.stringify(response.recomendaciones)
+      //         );
+      //         localStorage.setItem(
+      //           "recomendaciones",
+      //           JSON.stringify(response.random)
+      //         );
+      //         await obtenerRandoms();
+      //         await obtenerRecomendaciones();
+      //         spinner.remove();
+      //         btn.textContent = "Entrenar";
+      //       } catch (e) {
+      //         console.error("Error al obtener recomendaciones:", error);
+      //       }
+      //     });
+    </script>
+  </body>
+</html>
