@@ -30,21 +30,6 @@ def estado_check():
         "user_logged_in": session.get('logged_in', False)
     })
 
-@app.route('/api/entrenar', methods=['POST'])
-def entrenar_modelo():
-    data = request.get_json()
-    print(data)
-
-    if not data or 'ratings' not in data:
-        return jsonify({"error": "Se requieren ratings"}), 400
-
-    user_ratings = data['ratings']
-
-    try:
-        recomendaciones = ra.trainingRecommendation(user_ratings, True)
-        return jsonify({"recomendaciones": recomendaciones})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 @app.route('/api/recomendar', methods=['POST'])
 def obtener_recomendaciones():
@@ -72,15 +57,10 @@ def obtener_recomendaciones():
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    """
-    Endpoint de login - MODIFICADO para trabajar con formularios HTML
-    """
-    # Cambiamos a request.form para recibir datos del formulario HTML
     username = request.form.get('username')
     password = request.form.get('password')
     
     if not username or not password:
-        # Redirigir con error si faltan campos
         return """
         <script>
             alert('Usuario y contraseña requeridos');
@@ -100,12 +80,10 @@ def login():
         conn.close()
         
         if usuario:
-            # Login exitoso - guardar en sesión
             session['user_id'] = usuario[0]
             session['username'] = usuario[1]
             session['logged_in'] = True
             
-            # Redirigir a la página principal
             return """
             <script>
                 alert('✅ ¡Login exitoso! Bienvenido, """ + username + """');
@@ -113,7 +91,6 @@ def login():
             </script>
             """
         else:
-            # Credenciales incorrectas
             return """
             <script>
                 alert('Credenciales incorrectas');
@@ -134,7 +111,6 @@ def logout():
 
 @app.route('/api/user')
 def get_user():
-    """Obtener información del usuario actual (para AJAX)"""
     if session.get('logged_in'):
         return jsonify({
             'user_id': session.get('user_id'),
@@ -143,6 +119,75 @@ def get_user():
         })
     else:
         return jsonify({'logged_in': False})
+
+@app.route('/api/registro', methods=['POST'])
+def register():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    confirm_password = request.form.get('confirm_password')
+    
+    if not username or not password or not confirm_password:
+        return """
+        <script>
+            alert('Todos los campos son requeridos');
+            window.history.back();
+        </script>
+        """
+    
+    if password != confirm_password:
+        return """
+        <script>
+            alert('Las contraseñas no coinciden');
+            window.history.back();
+        </script>
+        """
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT id FROM usuarios WHERE nombre_usuario = %s", (username,))
+        if cursor.fetchone():
+            cursor.close()
+            conn.close()
+            return """
+            <script>
+                alert('El usuario ya existe');
+                window.history.back();
+            </script>
+            """
+        
+        cursor.execute(
+            "INSERT INTO usuarios (nombre_usuario, password) VALUES (%s, %s)",
+            (username, password)
+        )
+        conn.commit()
+        
+        cursor.close()
+        conn.close()
+        
+        return """
+        <script>
+            alert('✅ ¡Registro exitoso! Ahora puedes iniciar sesión');
+
+            window.location.href = '/'
+        </script>
+        """
+        
+    except mysql.connector.Error as e:
+        return f"""
+        <script>
+            alert('Error de base de datos: {str(e)}');
+            window.history.back();
+        </script>
+        """, 500
+    except Exception as e:
+        return f"""
+        <script>
+            alert('Error interno del servidor');
+            window.history.back();
+        </script>
+        """, 500
 
 @app.errorhandler(404)
 def no_encontrado(error):
@@ -162,7 +207,7 @@ if __name__ == '__main__':
     print("\n📚 Endpoints disponibles:")
     print("   GET  /              - Página principal")
     print("   GET  /api/estado    - Estado del servicio")
-    print("   POST /api/entrenar  - Entrenar modelo")
+    # print("   POST /api/entrenar  - Entrenar modelo")
     print("   POST /api/recomendar - Obtener recomendaciones")
     print("   POST /api/login     - Login de usuario")
     print("   GET  /api/logout    - Logout de usuario")
