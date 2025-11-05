@@ -12,7 +12,7 @@ Sistema web de recomendación de anime que utiliza filtrado colaborativo para su
 
 ### 1. Instalar dependencias
 ```bash
-pip install flask mysql-connector-python pandas numpy scikit-learn
+pip install flask mysql-connector-python pandas numpy scikit-learn flask-cors tqdm
 ```
 # Configurar base de datos
 CREATE DATABASE usuarios_login;
@@ -53,6 +53,7 @@ http://localhost:5000
 ### Funcionalidades
 <ul>
   <li>Login/Logout - Sistema de autenticación</li>
+  <li>Registro - Sistema de creación de usuarios</li>
   <li>Explorar catálogo - Visualizar animes</li>
   <li>Recomendaciones - Sistema ML personalizado</li>
   <li>Gestión de perfil - Opciones de usuario</li>
@@ -61,22 +62,50 @@ http://localhost:5000
 ### Endpoints
 
 <ul>
+  <li>POST /api/registro - Creación de Usuario</li>
   <li>POST /api/login - Autenticación</li>
-  <li>POST /api/recomendar - Recomendaciones</li>
   <li>GET /api/logout - Cerrar sesión</li>
+  <li>POST /api/recomendar - Recomendaciones</li>
   <li>GET /api/estado - Estado del servicio</li>
 </ul>
 
-### Estructura del proyecto
-miniProjectIA/
-├── api/
-│   ├── api.py
-│   ├── config.py
-│   └── templates/
-│       └── index.html
-├── ia/
-│   ├── script.py
-│   └── recomendacion_anime.py
-└── datos/
-    ├── anime.csv
-    └── rating.csv
+# Estructura de Proyecto
+<ul>
+    <li>api/api.py - Servidor Flask principal</li>
+    <li>api/config.py - Configuración de base de datos</li>
+    <li>api/templates/index.html - Interfaz web</li>
+    <li>ia/script.py - Procesamiento de recomendaciones</li>
+    <li>ia/recomendacion_anime.py - Algoritmo de machine learning</li>
+    <li>datos/ - Datasets de anime (anime.csv, rating.csv)</li>
+</ul>
+
+# Configuración para desarrollo
+
+<ul>
+    <li>Asegurar que MySQL esté ejecutándose </li>
+    <li>Verificar credenciales en config.py</li>
+    <li>Los datos de anime deben estar en /datos/</li>
+    <li>El servidor se inicia en puerto 5000</li>
+</ul>
+
+# 📊 Características Técnicas
+
+<ul>
+    <li>Backend: Flask + MySQL</li>
+    <li>Frontend: HTML5 + Bootstrap + JavaScript</li>
+    <li>ML: Filtrado colaborativo (Pearson correlation)</li>
+    <li>Autenticación: Sesiones Flask</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
